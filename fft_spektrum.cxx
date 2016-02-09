@@ -10,6 +10,8 @@ using namespace std;
 //-------------------------------
 void writeData(const fftw_complex* const f, const int N, const double L,const char* const fname);
 
+void readData(double* const p, const int N, char* fname, double& L);
+
 //-------------------------------
 
 int main(int argc, char** argv){
@@ -33,7 +35,7 @@ int main(int argc, char** argv){
 	fftw_plan FW  = fftw_plan_dft_r2c_1d(N, inR, f, FFTW_ESTIMATE);
 
 	// Read input data
-
+	readData(inR, N, in_file, L);
 	// Call function which reads the data from
 	// the input file into the array inR
 
@@ -52,6 +54,19 @@ int main(int argc, char** argv){
 	return 0;
 }
 //-------------------------------
+
+void readData(double* const p, const int N, char* fname, double& L){
+ ifstream in(fname);
+ double temp;
+  for (int i=0; i<N; i++){
+    // alle (!) Eintraege im input-file fname muessen einmal (!) ausgelesen werden.
+    in >> temp;
+    in >> p[i];// Zweite Spalte des Input-Files wird in einem Array gestored!
+  }
+  L = temp;
+ in.close();
+}
+
 void writeData(const fftw_complex* const f, const int N, const double L,const char* const fname){
 	ofstream out(fname);
 	const double dk = 2*M_PI/L;
